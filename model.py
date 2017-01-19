@@ -54,11 +54,15 @@ def initialize_model():
     model.add(Convolution2D(64, 3, 3, border_mode="valid", activation="relu"))
 
     model.add(Flatten())
+    
     model.add(Dropout(0.5))
+    
     model.add(Activation('relu'))
-
+    
     model.add(Dense(1164))
+    
     model.add(Dropout(0.5))
+    
     model.add(Activation('relu'))
 
     model.add(Dense(100))
