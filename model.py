@@ -1,4 +1,5 @@
 import os
+import re
 import cv2
 import json
 import pandas as pd
@@ -13,7 +14,7 @@ from keras.layers.core import Dense, Activation, Flatten, Dropout
 from keras.layers.convolutional import Convolution2D
 from keras.layers.normalization import BatchNormalization
 
-CWD = "/Users/kwu/Git/carnd-behavioral-cloning-p3"
+CWD = "/home/carnd/sdc-behavioral-cloning"
 IMG_W = 66
 IMG_L = 200
 N_CHANNEL = 3
@@ -78,6 +79,7 @@ def initialize_model():
     return model
 
 def process_img(path):
+    path = re.sub("/Users/kwu/Git/carnd-behavioral-cloning-p3", CWD, path)
     rgb = np.asarray(Image.open(path).resize((IMG_L, IMG_W)))
     yuv = cv2.cvtColor(rgb, cv2.COLOR_BGR2YCR_CB)
     return yuv
@@ -103,8 +105,8 @@ if __name__=="__main__":
 
     model.compile(optimizer=Adam(lr=0.0001), loss='mse', metrics=['mean_absolute_error'])
 
-    history = model.fit_generator(train_generator(x_train, y_train, batch_size=64), samples_per_epoch=len(y_train), nb_epoch=5, 
-        validation_data = train_generator(x_valid, y_valid, batch_size=len(y_valid)), nb_val_samples = len(y_valid))
+    history = model.fit_generator(train_generator(x_train, y_train, batch_size=32), samples_per_epoch=len(y_train), nb_epoch=5, 
+        validation_data = train_generator(x_valid, y_valid, batch_size=32), nb_val_samples = len(y_valid))
 
     json_string = model.to_json()
     model.save_weights("model.h5")
